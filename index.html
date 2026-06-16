@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EL UNIVERSO RAFA</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --negro: #0D0D0D;
+  --amarillo: #F5C518;
+  --rojo: #E63946;
+  --gris: #1A1A1A;
+  --gris2: #252525;
+  --blanco: #F0EDE8;
+}
+
+body {
+  background: var(--negro);
+  color: var(--blanco);
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  overflow-x: hidden;
+}
+
+/* Fondo animado sutil */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(245,197,24,0.04) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(230,57,70,0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.contenido {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+/* ── HERO ── */
+.hero {
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--amarillo);
+  opacity: 0.6;
+  margin-bottom: 0.75rem;
+}
+
+.titulo {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(3rem, 16vw, 6.5rem);
+  line-height: 0.88;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.titulo .el { color: var(--blanco); opacity: 0.3; font-size: 0.5em; display: block; }
+.titulo .universo { color: var(--blanco); display: block; }
+.titulo .rafa { color: var(--amarillo); display: block; font-size: 1.3em; }
+
+.subtitulo {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  opacity: 0.4;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+}
+
+/* ── STICKER RAFA ── */
+.rafa-sticker {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--amarillo);
+  box-shadow: 0 0 30px rgba(245,197,24,0.2);
+  animation: flotar 3s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.rafa-sticker img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rafa-placeholder {
+  width: 100%;
+  height: 100%;
+  background: var(--gris);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* ── CARDS ── */
+.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  background: var(--gris);
+  border: 2px solid var(--gris2);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  text-decoration: none;
+  color: var(--blanco);
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.card:hover {
+  border-color: var(--amarillo);
+  transform: translateX(4px);
+  box-shadow: -4px 0 0 var(--amarillo);
+}
+
+.card.rojo:hover {
+  border-color: var(--rojo);
+  box-shadow: -4px 0 0 var(--rojo);
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  width: 52px;
+  text-align: center;
+}
+
+.card-texto {
+  flex: 1;
+}
+
+.card-nombre {
+  font-family: 'Anton', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.card-desc {
+  font-size: 0.75rem;
+  opacity: 0.5;
+  line-height: 1.4;
+}
+
+.card-arrow {
+  font-size: 1.2rem;
+  opacity: 0.3;
+  flex-shrink: 0;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.card:hover .card-arrow {
+  opacity: 1;
+  transform: translateX(4px);
+}
+
+/* ── FOOTER ── */
+footer {
+  font-size: 0.62rem;
+  opacity: 0.2;
+  letter-spacing: 0.1em;
+  text-align: center;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<div class="contenido">
+
+  <div class="hero">
+    <p class="eyebrow">Portal oficial no oficial</p>
+    <h1 class="titulo">
+      <span class="el">El</span>
+      <span class="universo">Universo</span>
+      <span class="rafa">Rafa</span>
+    </h1>
+    <p class="subtitulo">Todo lo que necesitas saber sobre Rafa.<br>Y algunas cosas que no necesitabas.</p>
+  </div>
+
+  <div class="rafa-sticker">
+    <img src="https://grupoajui.github.io/qu--rafa-eres-hoy/img/rafa9.webp" alt="Rafa" onerror="this.parentElement.innerHTML='<div class=\'rafa-placeholder\'>😎</div>'">
+  </div>
+
+  <div class="cards">
+
+    <a class="card" href="que-rafa-eres-hoy.html">
+      <div class="card-icon">🎰</div>
+      <div class="card-texto">
+        <div class="card-nombre">¿QUÉ RAFA ERES HOY?</div>
+        <div class="card-desc">Gira la ruleta y descubre qué modo de Rafa te ha tocado hoy</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card rojo" href="rafa-kombat.html">
+      <div class="card-icon">🥊</div>
+      <div class="card-texto">
+        <div class="card-nombre">RAFA KOMBAT</div>
+        <div class="card-desc">Elige tu rival y pelea contra Rafa en 5 rondas épicas</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+  </div>
+
+  <footer>Uso interno de la pandilla · Ningún Rafa fue consultado</footer>
+
+</div>
+
+</body>
+</html>
