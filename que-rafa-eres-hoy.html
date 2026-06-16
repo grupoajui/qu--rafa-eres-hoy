@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿QUÉ RAFA ERES HOY?</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --negro: #0D0D0D;
+    --amarillo: #F5C518;
+    --rojo: #E63946;
+    --blanco-sucio: #F0EDE8;
+    --gris: #1A1A1A;
+    --gris2: #2A2A2A;
+  }
+
+  body {
+    background: var(--negro);
+    color: var(--blanco-sucio);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    text-align: center;
+    padding: 2rem 1rem 0;
+    position: relative;
+  }
+
+  .subtitle-top {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--amarillo);
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(2.8rem, 10vw, 7rem);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--blanco-sucio);
+  }
+
+  h1 span.rafa {
+    color: var(--amarillo);
+    display: block;
+    font-size: clamp(4rem, 14vw, 10rem);
+  }
+
+  h1 span.hoy {
+    color: var(--rojo);
+  }
+
+  /* ─── MAIN LAYOUT ─── */
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 4rem;
+    gap: 2rem;
+  }
+
+  /* ─── RULETA ─── */
+  .ruleta-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .ruleta-container {
+    position: relative;
+    width: min(340px, 88vw);
+    height: min(340px, 88vw);
+  }
+
+  /* Puntero */
+  .puntero {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 32px solid var(--rojo);
+    filter: drop-shadow(0 0 6px rgba(230,57,70,0.8));
+    z-index: 10;
+  }
+
+  canvas#ruleta {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: 0 0 40px rgba(245,197,24,0.25), 0 0 0 4px var(--amarillo);
+    cursor: pointer;
+  }
+
+  .btn-girar {
+    background: var(--amarillo);
+    color: var(--negro);
+    border: none;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    padding: 0.9rem 3rem;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: transform 0.1s, box-shadow 0.1s;
+    box-shadow: 4px 4px 0 var(--rojo);
+  }
+
+  .btn-girar:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0 var(--rojo); }
+  .btn-girar:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 var(--rojo); }
+  .btn-girar:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ─── VEREDICTO ─── */
+  #veredicto {
+    display: none;
+    width: min(600px, 94vw);
+    background: var(--gris);
+    border: 2px solid var(--amarillo);
+    border-radius: 6px;
+    overflow: hidden;
+    animation: aparecer 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes aparecer {
+    from { opacity: 0; transform: scale(0.8) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .veredicto-header {
+    background: var(--rojo);
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .veredicto-header .breaking {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: var(--amarillo);
+    color: var(--negro);
+    padding: 0.15rem 0.4rem;
+    border-radius: 2px;
+  }
+
+  .veredicto-header .dia {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    opacity: 0.8;
+    letter-spacing: 0.1em;
+  }
+
+  .veredicto-body {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .rafa-foto {
+    flex-shrink: 0;
+    width: 110px;
+    height: 110px;
+    border-radius: 4px;
+    border: 3px solid var(--amarillo);
+    background: var(--gris2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .rafa-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none; /* mostrar cuando se suba la foto */
+  }
+
+  .foto-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 2.5rem;
+  }
+
+  .foto-placeholder span {
+    font-size: 0.55rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--amarillo);
+    text-align: center;
+    letter-spacing: 0.05em;
+    line-height: 1.3;
+    opacity: 0.7;
+  }
+
+  .veredicto-texto {
+    flex: 1;
+  }
+
+  #modo-titulo {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.5rem;
+    color: var(--amarillo);
+    line-height: 1;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .stat-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .stat-list li {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    padding-left: 1rem;
+    position: relative;
+    color: var(--blanco-sucio);
+  }
+
+  .stat-list li::before {
+    content: '▶';
+    position: absolute;
+    left: 0;
+    color: var(--rojo);
+    font-size: 0.6rem;
+    top: 0.2em;
+  }
+
+  .stat-list li strong {
+    color: var(--amarillo);
+  }
+
+  #btn-otra {
+    display: none;
+    margin-top: 0.5rem;
+    background: transparent;
+    border: 1px solid var(--gris2);
+    color: var(--blanco-sucio);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    padding: 0.4rem 1rem;
+    border-radius: 3px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+
+  #btn-otra:hover { opacity: 1; }
+
+  /* ─── CONFETTI ─── */
+  .confetti-piece {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 999;
+    animation: caer linear forwards;
+  }
+
+  @keyframes caer {
+    0%   { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.7rem;
+    opacity: 0.3;
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── TABS MINIJUEGOS ─── */
+  .seccion-minijuegos {
+    width: min(640px, 94vw);
+    border-top: 1px solid var(--gris2);
+    padding-top: 2rem;
+  }
+
+  .seccion-titulo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+    color: var(--blanco-sucio);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .seccion-titulo span { color: var(--rojo); }
+
+  .minijuegos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .minijuego-card {
+    background: var(--gris);
+    border: 1px solid var(--gris2);
+    border-radius: 6px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .minijuego-card:hover {
+    border-color: var(--amarillo);
+    transform: translateY(-2px);
+  }
+
+  .minijuego-icon { font-size: 2.2rem; }
+
+  .minijuego-nombre {
+    font-family: 'Anton', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    color: var(--blanco-sucio);
+  }
+
+  .minijuego-desc {
+    font-size: 0.7rem;
+    opacity: 0.5;
+    line-height: 1.4;
+  }
+
+  .badge-pronto {
+    font-size: 0.55rem;
+    background: var(--gris2);
+    color: var(--amarillo);
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ─── MODAL MINIJUEGO ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .modal-overlay.activo { display: flex; }
+
+  .modal-box {
+    background: var(--gris);
+    border: 2px solid var(--amarillo);
+    border-radius: 8px;
+    padding: 2rem;
+    width: min(500px, 96vw);
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .modal-cerrar {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--blanco-sucio);
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+  }
+
+  .modal-cerrar:hover { opacity: 1; }
+
+  /* Minijuego: Adivina la cerveza */
+  #juego-cerveza {
+    text-align: center;
+  }
+
+  #juego-cerveza h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: 2rem;
+    color: var(--amarillo);
+    margin-bottom: 0.5rem;
+  }
+
+  #juego-cerveza p.instruccion {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .cerveza-opciones {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .opt-btn {
+    background: var(--gris2);
+    border: 2px solid transparent;
+    border-radius: 4px;
+    padding: 0.75rem;
+    color: var(--blanco-sucio);
+    font-family: 'Anton', sans-serif;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .opt-btn:hover:not(:disabled) { border-color: var(--amarillo); }
+  .opt-btn.correcto { border-color: #4CAF50; background: rgba(76,175,80,0.2); }
+  .opt-btn.incorrecto { border-color: var(--rojo); background: rgba(230,57,70,0.2); }
+  .opt-btn:disabled { cursor: not-allowed; }
+
+  #cerveza-resultado {
+    font-family: 'Anton', sans-serif;
+    font-size: 1.1rem;
+    min-height: 2rem;
+    color: var(--amarillo);
+    margin-bottom: 1rem;
+  }
+
+  .btn-juego {
+    background: var(--rojo);
+    color: white;
+    border: none;
+    font-family: 'Anton', sans-serif;
+    font-size: 1.1rem;
+    padding: 0.6rem 2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: opacity 0.2s;
+  }
+
+  .btn-juego:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="subtitle-top">⚡ El oráculo definitivo de la pandilla ⚡</p>
+  <h1>
+    ¿Qué<br>
+    <span class="rafa">RAFA</span>
+    eres <span class="hoy">hoy?</span>
+  </h1>
+</header>
+
+<main>
+
+  <!-- RULETA -->
+  <div class="ruleta-wrapper">
+    <div class="ruleta-container">
+      <div class="puntero"></div>
+      <canvas id="ruleta" width="600" height="600"></canvas>
+    </div>
+    <button class="btn-girar" id="btn-girar" onclick="girarRuleta()">🎰 ¡GIRAR!</button>
+  </div>
+
+  <!-- VEREDICTO -->
+  <div id="veredicto">
+    <div class="veredicto-header">
+      <span class="breaking">🔴 Breaking</span>
+      <span class="dia" id="veredicto-fecha"></span>
+    </div>
+    <div class="veredicto-body">
+      <div class="rafa-foto" id="rafa-foto-box">
+        <!-- 
+          Para añadir la foto de Rafa:
+          1. Pon tu foto en la misma carpeta con el nombre rafa.jpg (o .png)
+          2. Descomenta la línea del <img> de abajo y borra el placeholder
+        -->
+        <!-- <img src="rafa.jpg" alt="Rafa"> -->
+        <div class="foto-placeholder">
+          😎
+          <span>Pon aquí<br>la foto<br>de Rafa</span>
+        </div>
+      </div>
+      <div class="veredicto-texto">
+        <div id="modo-titulo">CARGANDO MODO...</div>
+        <ul class="stat-list" id="stats-lista"></ul>
+        <button id="btn-otra" onclick="otraVersion()">↺ Otra versión de Rafa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MINIJUEGOS -->
+  <div class="seccion-minijuegos">
+    <h2 class="seccion-titulo">Mini<span>juegos</span></h2>
+    <div class="minijuegos-grid">
+
+      <div class="minijuego-card" onclick="abrirJuego('cerveza')">
+        <span class="minijuego-icon">🍺</span>
+        <span class="minijuego-nombre">Adivina las cervezas</span>
+        <span class="minijuego-desc">¿Cuántas se meterá Rafa esta noche?</span>
+      </div>
+
+      <div class="minijuego-card" onclick="abrirJuego('pelea')">
+        <span class="minijuego-icon">🥊</span>
+        <span class="minijuego-nombre">¿Con quién se peleará?</span>
+        <span class="minijuego-desc">El generador de conflictos de Rafa</span>
+      </div>
+
+      <div class="minijuego-card">
+        <span class="minijuego-icon">🎯</span>
+        <span class="minijuego-nombre">Cara de Rafa</span>
+        <span class="minijuego-desc">Minijuego con su cara</span>
+        <span class="badge-pronto">Próximamente</span>
+      </div>
+
+      <div class="minijuego-card">
+        <span class="minijuego-icon">🔮</span>
+        <span class="minijuego-nombre">Horóscopo Rafaero</span>
+        <span class="minijuego-desc">Tu destino según Rafa</span>
+        <span class="badge-pronto">Próximamente</span>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL MINIJUEGOS -->
+<div class="modal-overlay" id="modal-overlay" onclick="cerrarModalSiOverlay(event)">
+  <div class="modal-box">
+    <button class="modal-cerrar" onclick="cerrarModal()">✕</button>
+    <div id="modal-contenido"></div>
+  </div>
+</div>
+
+<footer>RAFA™ · Uso interno del grupo · Ningún Rafa fue dañado en la producción de esta web</footer>
+
+<script>
+// ═══════════════════════════════════════════
+//  DATOS: MODOS DE RAFA
+// ═══════════════════════════════════════════
+const MODOS = [
+  {
+    label: "RAFA FUTBOLERO",
+    color: "#00CEC9",
+    emoji: "⚽",
+    img: "img/rafa1.webp",
+    frase: "Va con España. Pero en realidad va con Marruecos.",
+    titulo: "MODO FUTBOLERO SUPREMO",
+    stats: () => [
+      `<strong>⚽ Partidos analizados en profundidad:</strong> ${rand(3,9)}`,
+      `<strong>📊 Estadísticas inventadas:</strong> ${rand(5,15)} con total convicción`,
+      `<strong>🇲🇦 Mensajes en el grupo de Marruecos:</strong> ${rand(4,12)}`,
+      `<strong>🍺 Cervezas por gol de su equipo:</strong> ${rand(2,4)}`,
+      `<strong>😤 Árbitros insultados (desde el sofá):</strong> ${rand(8,25)}`,
+    ]
+  },
+  {
+    label: "RAFA MEDIODÍA",
+    color: "#55EFC4",
+    emoji: "😴",
+    img: "img/rafa3.webp",
+    frase: "Son las dos del mediodía. Ya está fuera. Mañana resaca.",
+    titulo: "MODO SIESTA OBLIGATORIA",
+    stats: () => [
+      `<strong>🕑 Hora de colapso:</strong> ${rand(13,15)}:${String(rand(0,59)).padStart(2,'0')}h`,
+      `<strong>🍺 Cervezas del mediodía:</strong> ${rand(3,8)} "que eran pocas"`,
+      `<strong>📱 WhatsApps sin responder:</strong> ${rand(5,20)}`,
+      `<strong>🛋️ Posición en el sillón:</strong> inamovible`,
+      `<strong>🌅 Probabilidad de salir esta noche:</strong> ${rand(70,99)}% (ya sabéis cómo acaba)`,
+    ]
+  },
+  {
+    label: "RAFA NAVIDEÑO",
+    color: "#E63946",
+    emoji: "🎄",
+    img: "img/rafa4.webp",
+    frase: "No gasta ni bromas. Imagínate regalos.",
+    titulo: "MODO NAVIDEÑO TACAÑO",
+    stats: () => [
+      `<strong>🎁 Regalos comprados:</strong> ${rand(0,1)}`,
+      `<strong>💸 Presupuesto navideño:</strong> ${rand(0,5)}€`,
+      `<strong>🍺 Cervezas en la cena de Navidad:</strong> ${rand(6,15)}`,
+      `<strong>🎅 Veces que ha dicho "este año sí regalo":</strong> ${rand(3,8)}`,
+      `<strong>😅 Excusa favorita:</strong> "Es que no sé qué poneros"`,
+    ]
+  },
+  {
+    label: "RAFA CARNAVAL",
+    color: "#A29BFE",
+    emoji: "👻",
+    img: "img/rafa5.webp",
+    frase: "Lo han echado de todas las chirigotas. En la suya aguanta porque es el autor.",
+    titulo: "MODO CARNAVALERO",
+    stats: () => [
+      `<strong>🎭 Chirigotas que lo han echado:</strong> ${rand(3,9)}`,
+      `<strong>✍️ Coplas escritas esta temporada:</strong> ${rand(2,6)}`,
+      `<strong>🍺 Cervezas por ensayo:</strong> ${rand(4,10)}`,
+      `<strong>🏆 Premios ganados:</strong> ninguno, pero el año que viene`,
+      `<strong>🎤 Veces que ha dicho "este año sí":</strong> ${rand(4,9)}`,
+    ]
+  },
+  {
+    label: "RAFA POTATO",
+    color: "#FDCB6E",
+    emoji: "🥔",
+    img: "img/rafa6.webp",
+    frase: "Rafa de Toy Story. Andy lo tiró a la basura y él tan contento.",
+    titulo: "MODO TOY STORY",
+    stats: () => [
+      `<strong>🧸 Dueño actual:</strong> nadie, se autogestionó`,
+      `<strong>📱 Selfies en el cubo de basura:</strong> ${rand(2,6)}`,
+      `<strong>🍺 Cervezas desde que Andy lo tiró:</strong> ${rand(10,30)}`,
+      `<strong>😎 Nivel de arrepentimiento:</strong> cero`,
+      `<strong>🔮 Plan a futuro:</strong> "ya saldrá algo"`,
+    ]
+  },
+  {
+    label: "RAFA POST-ENSAYO",
+    color: "#FF6B9D",
+    emoji: "🎸",
+    img: "img/rafa7.webp",
+    frase: "Una caña en la Mari después del ensayo. Llegó a casa a las 5.",
+    titulo: "MODO POST-ENSAYO EN LA MARI",
+    stats: () => [
+      `<strong>🎸 Duración del ensayo:</strong> ${rand(1,2)}h`,
+      `<strong>🍺 Duración en la Mari:</strong> ${rand(3,6)}h`,
+      `<strong>🕔 Hora de llegada a casa:</strong> ${rand(3,6)}:${String(rand(0,59)).padStart(2,'0')}h`,
+      `<strong>😴 Estado al llegar:</strong> clínico`,
+      `<strong>📱 Mensaje enviado:</strong> "mañana ensayo!!"`,
+    ]
+  },
+  {
+    label: "RAFA PEPELU",
+    color: "#636e72",
+    emoji: "😐",
+    img: "img/rafa8.webp",
+    frase: "Pepelu le ha regañado. Le dura serio hasta el primer cubata.",
+    titulo: "MODO REGAÑADO POR PEPELU",
+    stats: () => [
+      `<strong>😤 Motivo de la bronca:</strong> "${pickRandom(motivosPepelu)}"`,
+      `<strong>⏱️ Tiempo que dura serio:</strong> ${rand(10,45)} minutos`,
+      `<strong>🍺 Cubatas para olvidar:</strong> ${rand(2,5)}`,
+      `<strong>📣 Quejas sobre Pepelu:</strong> ${rand(4,12)} en la noche`,
+      `<strong>🔮 Probabilidad de repetirse mañana:</strong> ${rand(80,99)}%`,
+    ]
+  },
+  {
+    label: "RAFA ALIADO",
+    color: "#FF6B9D",
+    emoji: "🌺",
+    img: "img/rafa9.webp",
+    frase: "Aliado del colectivo. Lo que quiere es que le presenten a las amigas.",
+    titulo: "MODO ALIADO ESTRATÉGICO",
+    stats: () => [
+      `<strong>🏳️‍🌈 Nivel de alianza:</strong> ${rand(85,99)}% (interesada)`,
+      `<strong>👯 Amigas conocidas esta noche:</strong> ${rand(1,4)}`,
+      `<strong>📱 Números conseguidos:</strong> ${rand(0,2)}`,
+      `<strong>🌺 Veces que ha dicho "yo os apoyo mucho":</strong> ${rand(3,8)}`,
+      `<strong>🎯 Objetivo real:</strong> conocido por todos menos por él`,
+    ]
+  },
+  {
+    label: "RAFA CANSADO",
+    color: "#2d3436",
+    emoji: "🫠",
+    img: "img/rafa10.webp",
+    frase: "Rafa cansado. Da igual cuando leas esto.",
+    titulo: "MODO CANSADO PERPETUO",
+    stats: () => [
+      `<strong>😴 Horas dormidas:</strong> ${rand(2,5)}`,
+      `<strong>☕ Cafés necesarios para funcionar:</strong> ${rand(3,7)}`,
+      `<strong>🍺 Cervezas de todas formas:</strong> ${rand(4,10)}`,
+      `<strong>📱 Veces que ha dicho "estoy muerto":</strong> ${rand(5,15)}`,
+      `<strong>🔮 Probabilidad de estar igual mañana:</strong> 100%`,
+    ]
+  },
+  {
+    label: "RAFA FUNKO",
+    color: "#FDCB6E",
+    emoji: "🎮",
+    img: "img/rafa11.webp",
+    frase: "Edición limitada. No viene con instrucciones y se nota.",
+    titulo: "MODO FUNKO POP EDICIÓN LIMITADA",
+    stats: () => [
+      `<strong>📦 Estado del embalaje:</strong> abierto desde el primer día`,
+      `<strong>💸 Valor en el mercado:</strong> incalculable (según él)`,
+      `<strong>🍺 Accesorios incluidos:</strong> una caña de serie`,
+      `<strong>📋 Manual de instrucciones:</strong> no incluido, nunca existió`,
+      `<strong>🎯 Coleccionable:</strong> sí, pero nadie sabe muy bien por qué`,
+    ]
+  },
+  {
+    label: "RAFA CERVECERO",
+    color: "#F5C518",
+    emoji: "🍺",
+    img: null,
+    frase: "Esta noche va a ser larga. Muy larga.",
+    titulo: "MODO CERVECERO SUPREMO",
+    stats: () => [
+      `<strong>🍺 Cervezas previstas:</strong> ${rand(18,35)} (y dice que solo serán dos)`,
+      `<strong>⏰ Hora de irse:</strong> "En 10 minutos" repetido ${rand(8,20)} veces`,
+      `<strong>💸 Gasto estimado:</strong> ${rand(60,150)}€ que "no recuerda haber gastado"`,
+      `<strong>📞 Llamadas perdidas:</strong> ${rand(3,9)} de su madre`,
+      `<strong>🌅 Probabilidad de ver el amanecer:</strong> ${rand(85,99)}%`,
+    ]
+  },
+];
+
+const frasesFilosofo = [
+  "La vida es un bar y todos pedimos sin mirar el precio",
+  "¿Y si el tiempo no existe y solo existen las rondas?",
+  "El ser humano es básicamente un Rafa con mejor ortografía",
+  "Todo es una ilusión, menos la resaca, que esa es muy real",
+  "Si te vas pronto, ¿realmente estuviste?",
+];
+
+const temasBarra = [
+  "La FIFA está manipulada desde 1982",
+  "Los pájaros son drones del gobierno",
+  "Por qué Sevilla merece otra capitalidad",
+  "El precio de la cerveza y el coste de la vida",
+  "Por qué él tiene razón y todos los demás están equivocados",
+];
+
+const motivosPelea = [
+  "alguien no estuvo de acuerdo con él en algo sin importancia",
+  "la canción del bar era mala",
+  "le pusieron el partido equivocado",
+  "alguien pidió irse antes de tiempo",
+  "desacuerdo filosófico sobre el FC Sevilla",
+  "un comentario inocente que él tomó como declaración de guerra",
+];
+
+const frasesLigue = [
+  "¿Tú también eres de Sevilla? Qué casualidad...",
+  "Tengo una teoría sobre ti",
+  "Mi amigo me ha dicho que le gustas... (él es su amigo)",
+  "¿Sabes que tienes unos ojos muy particulares?",
+  "¿Te he visto antes o es que eres famosa?",
+];
+
+const motivosPepelu = [
+  "llegó tarde otra vez",
+  "no entregó el informe",
+  "se fue antes sin avisar",
+  "estaba en el móvil en la reunión",
+  "llegó con resaca (otra vez)",
+  "dijo que 'ya lo hago luego'",
+];
+
+// Segmentos ruleta
+const segmentos = MODOS.map(m => ({ label: m.label, color: m.color, emoji: m.emoji }));
+
+// ═══════════════════════════════════════════
+//  RULETA
+// ═══════════════════════════════════════════
+const canvas = document.getElementById('ruleta');
+const ctx = canvas.getContext('2d');
+const NUM = segmentos.length;
+const ARC = (2 * Math.PI) / NUM;
+
+let anguloActual = 0;
+let girando = false;
+let velocidad = 0;
+let rafId = null;
+let indexGanador = null;
+
+function dibujarRuleta(angulo) {
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const r = cx - 8;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  segmentos.forEach((seg, i) => {
+    const inicio = angulo + i * ARC - Math.PI / 2;
+    const fin = inicio + ARC;
+
+    // Sector
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, inicio, fin);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.fill();
+    ctx.strokeStyle = '#0D0D0D';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Emoji
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(inicio + ARC / 2);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = `${r * 0.14}px serif`;
+    ctx.fillText(seg.emoji, r * 0.58, 0);
+    ctx.restore();
+
+    // Label
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(inicio + ARC / 2);
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#0D0D0D';
+    ctx.font = `bold ${r * 0.065}px Inter, sans-serif`;
+    // wrap text
+    const palabras = seg.label.split(' ');
+    const lineas = [];
+    let linea = '';
+    palabras.forEach(p => {
+      if ((linea + p).length > 9) { if (linea) lineas.push(linea.trim()); linea = p + ' '; }
+      else linea += p + ' ';
+    });
+    if (linea.trim()) lineas.push(linea.trim());
+    const lh = r * 0.075;
+    lineas.forEach((l, li) => {
+      ctx.fillText(l, r * 0.3, (li - (lineas.length - 1) / 2) * lh);
+    });
+    ctx.restore();
+  });
+
+  // Centro
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 0.1, 0, Math.PI * 2);
+  ctx.fillStyle = '#0D0D0D';
+  ctx.fill();
+  ctx.strokeStyle = '#F5C518';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.fillStyle = '#F5C518';
+  ctx.font = `bold ${r * 0.09}px serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🎰', cx, cy);
+}
+
+function girarRuleta() {
+  if (girando) return;
+  girando = true;
+  document.getElementById('btn-girar').disabled = true;
+  document.getElementById('veredicto').style.display = 'none';
+  document.getElementById('btn-otra').style.display = 'none';
+
+  velocidad = 0.25 + Math.random() * 0.2;
+  const duracion = 3500 + Math.random() * 2000;
+  const inicio = performance.now();
+
+  function frame(ahora) {
+    const elapsed = ahora - inicio;
+    const t = Math.min(elapsed / duracion, 1);
+    const ease = 1 - Math.pow(1 - t, 4);
+    velocidad = (0.25 + Math.random() * 0.05) * (1 - ease);
+
+    anguloActual += velocidad;
+    dibujarRuleta(anguloActual);
+
+    if (t < 1) {
+      rafId = requestAnimationFrame(frame);
+    } else {
+      girando = false;
+      document.getElementById('btn-girar').disabled = false;
+      calcularGanador();
+    }
+  }
+  rafId = requestAnimationFrame(frame);
+}
+
+function calcularGanador() {
+  // El puntero apunta arriba (ángulo 0 = 12h)
+  // Normalizamos para saber qué sector está arriba
+  const angNorm = ((anguloActual % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+  // El sector que está bajo el puntero (12h = top)
+  const angPuntero = (2 * Math.PI - angNorm) % (2 * Math.PI);
+  indexGanador = Math.floor(angPuntero / ARC) % NUM;
+  mostrarVeredicto(indexGanador);
+}
+
+function mostrarVeredicto(idx) {
+  const modo = MODOS[idx];
+  const el = document.getElementById('veredicto');
+
+  document.getElementById('veredicto-fecha').textContent =
+    new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
+
+  document.getElementById('modo-titulo').textContent = modo.titulo;
+
+  // Foto / sticker del modo
+  const fotoBox = document.getElementById('rafa-foto-box');
+  if (modo.img) {
+    fotoBox.innerHTML = `<img src="${modo.img}" alt="${modo.label}" style="width:100%;height:100%;object-fit:cover;border-radius:2px;">`;
+  } else {
+    fotoBox.innerHTML = `<div class="foto-placeholder"><span style="font-size:2.5rem">${modo.emoji}</span></div>`;
+  }
+
+  // Frase del modo debajo del título
+  document.getElementById('modo-titulo').innerHTML =
+    `${modo.titulo}<div style="font-family:Inter,sans-serif;font-size:0.82rem;font-weight:400;color:var(--blanco-sucio);opacity:0.75;margin-top:0.4rem;line-height:1.4">"${modo.frase}"</div>`;
+
+  const lista = document.getElementById('stats-lista');
+  lista.innerHTML = '';
+  modo.stats().forEach(s => {
+    const li = document.createElement('li');
+    li.innerHTML = s;
+    lista.appendChild(li);
+  });
+
+  el.style.display = 'block';
+  document.getElementById('btn-otra').style.display = 'inline-block';
+
+  lanzarConfetti(modo.color);
+
+  setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+}
+
+function otraVersion() {
+  // Regenera stats del mismo modo (datos son random)
+  mostrarVeredicto(indexGanador);
+}
+
+// ═══════════════════════════════════════════
+//  CONFETTI
+// ═══════════════════════════════════════════
+function lanzarConfetti(color) {
+  const colores = [color, '#F5C518', '#E63946', '#ffffff', '#A29BFE'];
+  for (let i = 0; i < 45; i++) {
+    setTimeout(() => {
+      const d = document.createElement('div');
+      d.className = 'confetti-piece';
+      d.style.cssText = `
+        left: ${Math.random() * 100}vw;
+        top: -10px;
+        background: ${colores[Math.floor(Math.random() * colores.length)]};
+        width: ${6 + Math.random() * 8}px;
+        height: ${6 + Math.random() * 8}px;
+        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+        animation-duration: ${1.5 + Math.random() * 2}s;
+        animation-delay: 0s;
+      `;
+      document.body.appendChild(d);
+      setTimeout(() => d.remove(), 4000);
+    }, i * 40);
+  }
+}
+
+// ═══════════════════════════════════════════
+//  MINIJUEGOS
+// ═══════════════════════════════════════════
+function abrirJuego(tipo) {
+  const modal = document.getElementById('modal-overlay');
+  const contenido = document.getElementById('modal-contenido');
+  modal.classList.add('activo');
+
+  if (tipo === 'cerveza') contenido.innerHTML = htmlJuegoCerveza();
+  if (tipo === 'pelea') contenido.innerHTML = htmlJuegoPelea();
+}
+
+function cerrarModal() {
+  document.getElementById('modal-overlay').classList.remove('activo');
+}
+
+function cerrarModalSiOverlay(e) {
+  if (e.target === document.getElementById('modal-overlay')) cerrarModal();
+}
+
+// ─── JUEGO 1: Adivina las cervezas ───
+let cervezaCorrecta = 0;
+let cervezaPuntos = 0;
+let cervezaRonda = 0;
+
+function htmlJuegoCerveza() {
+  cervezaPuntos = 0;
+  cervezaRonda = 0;
+  return `
+  <div id="juego-cerveza">
+    <h2>🍺 ADIVINA LAS CERVEZAS</h2>
+    <p class="instruccion">¿Cuántas cervezas beberá Rafa esta noche?<br>Elige el número más exagerado posible.</p>
+    <div id="cerveza-pregunta-area"></div>
+    <div id="cerveza-resultado"></div>
+    <div id="cerveza-score" style="font-size:0.8rem;opacity:0.5;margin-top:0.5rem"></div>
+    <button class="btn-juego" id="cerveza-siguiente" onclick="siguienteCerveza()" style="display:none">Siguiente ronda ▶</button>
+  </div>`;
+}
+
+// Rondas después de insertar el HTML
+setTimeout(() => { if (document.getElementById('juego-cerveza')) nuevaRondaCerveza(); }, 50);
+// Observar inserción
+const observer = new MutationObserver(() => {
+  if (document.getElementById('juego-cerveza') && cervezaRonda === 0) {
+    nuevaRondaCerveza();
+  }
+});
+observer.observe(document.getElementById('modal-contenido'), { childList: true });
+
+function nuevaRondaCerveza() {
+  cervezaRonda++;
+  const correcto = rand(15, 40);
+  cervezaCorrecta = correcto;
+
+  // Generar 4 opciones cercanas pero distintas
+  const ops = new Set([correcto]);
+  while (ops.size < 4) ops.add(rand(Math.max(1, correcto - 15), correcto + 15));
+  const opciones = shuffle([...ops]);
+
+  const area = document.getElementById('cerveza-pregunta-area');
+  if (!area) return;
+
+  const situaciones = [
+    "Es viernes por la noche y hay partido",
+    "Cumpleaños de alguien del grupo",
+    "Salida de chiringuito",
+    "Despedida de soltero (no es la suya)",
+    "Martes sin motivo aparente",
+  ];
+
+  area.innerHTML = `
+    <p style="font-family:Anton,sans-serif;font-size:1.3rem;color:var(--blanco-sucio);margin-bottom:1rem">
+      Situación: <span style="color:var(--amarillo)">${pickRandom(situaciones)}</span>
+    </p>
+    <div class="cerveza-opciones">
+      ${opciones.map(n => `<button class="opt-btn" onclick="responderCerveza(${n})">${n} 🍺</button>`).join('')}
+    </div>`;
+
+  document.getElementById('cerveza-resultado').textContent = '';
+  document.getElementById('cerveza-siguiente').style.display = 'none';
+}
+
+function responderCerveza(elegido) {
+  document.querySelectorAll('.opt-btn').forEach(b => {
+    b.disabled = true;
+    const n = parseInt(b.textContent);
+    if (n === cervezaCorrecta) b.classList.add('correcto');
+    else if (n === elegido) b.classList.add('incorrecto');
+  });
+
+  const res = document.getElementById('cerveza-resultado');
+  if (elegido === cervezaCorrecta) {
+    cervezaPuntos++;
+    res.innerHTML = `✅ ¡EXACTO! Son ${cervezaCorrecta}, como siempre`;
+  } else {
+    res.innerHTML = `❌ Son ${cervezaCorrecta}. Rafa siempre sorprende (a peor)`;
+  }
+
+  document.getElementById('cerveza-score').textContent = `Ronda ${cervezaRonda}/5 · Aciertos: ${cervezaPuntos}`;
+
+  if (cervezaRonda < 5) {
+    document.getElementById('cerveza-siguiente').style.display = 'inline-block';
+    document.getElementById('cerveza-siguiente').onclick = nuevaRondaCerveza;
+  } else {
+    const msgs = ['¡Eres un experto en Rafa! 🏆', 'No está mal, conoces a tu Rafa 👍', 'Llevas poco tiempo con Rafa 😅'];
+    const msg = cervezaPuntos >= 4 ? msgs[0] : cervezaPuntos >= 2 ? msgs[1] : msgs[2];
+    document.getElementById('cerveza-siguiente').textContent = `Resultado final: ${cervezaPuntos}/5 · ${msg}`;
+    document.getElementById('cerveza-siguiente').style.display = 'inline-block';
+    document.getElementById('cerveza-siguiente').onclick = () => {
+      document.getElementById('modal-contenido').innerHTML = htmlJuegoCerveza();
+    };
+  }
+}
+
+// ─── JUEGO 2: ¿Con quién se peleará? ───
+const personas = ["Paco", "El camarero", "Un desconocido", "Sí mismo", "El árbitro (en TV)", "La música del bar", "El Uber driver", "Google Maps"];
+const motivos2 = [
+  "porque sí", "por el fútbol", "por quién paga la ronda",
+  "por una opinión no solicitada", "por llegar tarde", "sin motivo claro", "por el volumen del bar"
+];
+
+function htmlJuegoPelea() {
+  return `
+  <div style="text-align:center">
+    <h2 style="font-family:Anton,sans-serif;font-size:2rem;color:var(--rojo);margin-bottom:0.5rem">🥊 GENERADOR DE CONFLICTOS</h2>
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:1.5rem">Pulsa para descubrir el próximo conflicto de Rafa</p>
+    <div id="pelea-resultado" style="background:var(--gris2);border-radius:6px;padding:1.5rem;margin-bottom:1rem;min-height:4rem;display:flex;align-items:center;justify-content:center">
+      <span style="opacity:0.4;font-size:0.9rem">Aquí aparecerá el conflicto...</span>
+    </div>
+    <button class="btn-juego" onclick="generarPelea()">🎲 GENERAR CONFLICTO</button>
+    <div id="pelea-historial" style="margin-top:1.5rem;text-align:left;max-height:180px;overflow-y:auto"></div>
+  </div>`;
+}
+
+function generarPelea() {
+  const persona = pickRandom(personas);
+  const motivo = pickRandom(motivos2);
+  const hora = `${rand(21,26) % 24}:${String(rand(0,59)).padStart(2,'0')}`;
+  const prob = rand(40,95);
+
+  const texto = `<strong style="color:var(--amarillo)">${hora}h</strong> — Rafa se enfrenta a <strong style="color:var(--rojo)">${persona}</strong> ${motivo}. Probabilidad de escalada: <strong style="color:var(--amarillo)">${prob}%</strong>`;
+
+  document.getElementById('pelea-resultado').innerHTML = `<span style="font-size:0.9rem;line-height:1.6">${texto}</span>`;
+
+  const hist = document.getElementById('pelea-historial');
+  const item = document.createElement('div');
+  item.style.cssText = 'font-size:0.72rem;opacity:0.5;padding:0.3rem 0;border-bottom:1px solid #222';
+  item.innerHTML = texto;
+  hist.prepend(item);
+}
+
+// ═══════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════
+function rand(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
+
+// Init
+dibujarRuleta(0);
+</script>
+</body>
+</html>
